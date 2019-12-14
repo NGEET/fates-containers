@@ -29,4 +29,6 @@ RUN --mount=type=ssh git clone git@github.com:E3SM-Project/E3SM.git && \
     cd E3SM && \
     git submodule update --init --recursive
 
+CMD [ "bin/bash" ]
+
 ### EOF
