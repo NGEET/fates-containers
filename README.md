@@ -29,6 +29,6 @@ This repository contains the necessary Dockerfiles to build FATES Docker images 
 
 ## To Do
 
-- Include dockerfile builds for jupyter notebooks to host examples
-- Migrate base OS dockerfiles here as well?
-- Setup automated build system to push master branch updates to dockerfiles to dockerhub repo 
+- [ ] Include dockerfile builds for jupyter notebooks to host examples
+- [ ] Migrate base OS dockerfiles here as well?
+- [ ] Setup automated build system to push master branch updates to dockerfiles to dockerhub repo 
