@@ -25,9 +25,10 @@ This repository contains the necessary Dockerfiles to build FATES Docker images 
     - [Linux Install](https://docs.docker.com/install/)
     - [Mac Install](https://docs.docker.com/docker-for-mac/)
     - [Windows install](https://docs.docker.com/docker-for-windows/)
-2. *Optional* - Sign up with [Docker Hub](https://hub.docker.com/)
+2. Sign up with [Docker Hub](https://hub.docker.com/)
 
 ## To Do
 
 - Include dockerfile builds for jupyter notebooks to host examples
 - Migrate base OS dockerfiles here as well?
+- Setup automated build system to push master branch updates to dockerfiles to dockerhub repo 
