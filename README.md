@@ -25,6 +25,7 @@ This repository contains the necessary Dockerfiles to build FATES Docker images 
     - [Linux Install](https://docs.docker.com/install/)
     - [Mac Install](https://docs.docker.com/docker-for-mac/)
     - [Windows install](https://docs.docker.com/docker-for-windows/)
+2. *Optional* - Sign up with [Docker Hub](https://hub.docker.com/)
 
 ## To Do
 
