@@ -35,4 +35,7 @@ ENV USER=elmuser
 # Copy in an example script - eventually move this to another Dockerfile as a testbed?
 COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
 
+# Change permissions for the script
+RUN chmod u+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
+
 ### EOF
