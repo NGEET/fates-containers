@@ -29,4 +29,10 @@ RUN --mount=type=ssh git clone git@github.com:E3SM-Project/E3SM.git && \
     cd E3SM && \
     git submodule update --init --recursive
 
+## setup user for docker since mpirun doesn't like running as root
+ENV USER=elmuser
+
+# Copy in an example script - eventually move this to another Dockerfile as a testbed?
+COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
+
 ### EOF

@@ -11,3 +11,5 @@ Building this image requires the use of the experimental Docker BuildKit as of D
 ## To Do
 
 - [ ] Test simple script to build and run ELM-FATES
+- [ ] Create specific dockerfile(s) for 'testbeds' that contain multiple example scripts.
+    - Include in jupyter docker image?
