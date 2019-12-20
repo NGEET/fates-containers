@@ -20,22 +20,30 @@ RUN mkdir data && \
     mkdir output && \
     mkdir scripts
 
+# Grab a newer version of cmake
+ADD https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2.tar.gz /
+
+# Install the version of 
+
 # download public key for github.com
 RUN mkdir -p -m 0600 ~/.ssh \
     && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # clone E3SM and initialize the submodules, includes FATES (note the --mount)
+# Note we also checkout a specific hash of e3sm.  There is a bug introducted 
+# in later versions of E3SM
 RUN --mount=type=ssh git clone git@github.com:E3SM-Project/E3SM.git && \
     cd E3SM && \
-    git submodule update --init --recursive
-
-## setup user for docker since mpirun doesn't like running as root
-ENV USER=elmuser
+    git submodule update --init --recursive && \
+    git checkout dd276c966240ed65dd34fb5cddcc595caed02679 -b latestworkingfates
 
 # Copy in an example script - eventually move this to another Dockerfile as a testbed?
 COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
 
 # Change permissions for the script
 RUN chmod u+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
+
+## setup user 
+ENV USER=elmuser
 
 ### EOF

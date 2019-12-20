@@ -12,7 +12,7 @@
 export DEBUGGING=FALSE
 
 # Set the desired compset - use query_config and/or query_testlist for compset names
-export COMPSET=I2000Clm50FatesCruGs
+export COMPSET=ICLM45ED
 
 # Set the resolution
 export RESOLUTION=1x1_brazil
@@ -21,7 +21,7 @@ export RESOLUTION=1x1_brazil
 # USER AND MACHINE SPECIFIC SETUP - CHANGE AS NECESSARY
 #------------------------------------------------------
 export CIME_MODEL=e3sm
-export PROJECT=ac_ngeet
+export PROJECT=fakeproject
 export CATEGORY=fates
 export MACH=docker
 export COMPILER=gnu
@@ -32,8 +32,8 @@ export CASEDIR=/output
 #---------------------------------------------------------
 # Setup githash to append to test directory name
 export ELMHASH=`cd ../../;git log -n 1 --format=%h`
-export FATESHASH=`(cd ../../src/fates;git log -n 1 --format=%h)`
-export GITHASH="E"${CLMHASH}"-F"${FATESHASH}
+export FATESHASH=`(cd ../../components/clm/src/external_models/fates;git log -n 1 --format=%h)`
+export GITHASH="E"${ELMHASH}"-F"${FATESHASH}
 
 # Setup build, run and output directory
 export CASENAME=${CASEDIR}/${MACH}.${RESOLUTION}.${COMPSET}.${CIME_MODEL}.${CATEGORY}.${GITHASH}
@@ -41,7 +41,7 @@ export CASENAME=${CASEDIR}/${MACH}.${RESOLUTION}.${COMPSET}.${CIME_MODEL}.${CATE
 #----------------
 # CREATE THE CASE
 #----------------
-./create_newcase --case=${CASENAME} --project=${PROJECT} --res=${RESOLUTION} --compset=${COMPSET} --mach=${MACH} --compiler=${COMPILER} --run-unsupported
+./create_newcase --case=${CASENAME} --project=${PROJECT} --res=${RESOLUTION} --compset=${COMPSET} --mach=${MACH} --compiler=${COMPILER} 
 
 # Change to the created case directory
 cd ${CASENAME}
