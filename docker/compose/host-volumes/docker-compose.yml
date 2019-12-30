@@ -1,0 +1,13 @@
+version: "3.7"
+services: 
+  notebook:
+    image: jupyter/minimal-notebook:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ~/Work/Scripts:/home/scripts
+  hostmodel:
+      image: ngeetropics/elmtest:v7
+      volumes:
+        - ~/inputdata:/data
+        - ~/scratch/docker-output:/ouput
