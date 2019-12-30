@@ -17,6 +17,11 @@ ENV USER=elmuser
 # Set the maintainer metadata label
 LABEL maintainer="glemieux@lbl.gov"
 
+# Create mount point directories within the container (leave out scripts for direct volume mount?)
+RUN mkdir data && \
+    mkdir output && \
+    mkdir scripts
+
 # Download public key for github.com
 RUN mkdir -p -m 0600 ~/.ssh \
     && ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -56,15 +61,10 @@ WORKDIR /home/elmuser
 # Copy in the configuration files for the container
 COPY .cime /home/elmuser/.cime
 
-# Create mount point directories within the container (leave out scripts for direct volume mount?)
-RUN mkdir data && \
-    mkdir output && \
-    mkdir scripts
-
 # Copy in an example script - eventually move this to another Dockerfile as a testbed?
 COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
 
 # Change permissions for the script
-RUN chmod u+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
+# RUN chmod u+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
 
 ### EOF
