@@ -58,8 +58,8 @@ RUN groupadd -r dockerusers &&\
 USER elmuser
 WORKDIR /home/elmuser
 
-# Copy in the configuration files for the container
-COPY .cime /home/elmuser/.cime
+# Copy in the configuration files to the container user home directory
+COPY cime /home/elmuser/.cime
 
 # Copy in an example script - eventually move this to another Dockerfile as a testbed?
 COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
