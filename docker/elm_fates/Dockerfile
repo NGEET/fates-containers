@@ -17,15 +17,6 @@ ENV USER=elmuser
 # Set the maintainer metadata label
 LABEL maintainer="glemieux@lbl.gov"
 
-# # Create mount point directories within the container (leave out scripts for direct volume mount?)
-# RUN mkdir data && \
-#     mkdir output && \
-#     mkdir scripts
-
-# Download public key for github.com
-RUN mkdir -p -m 0600 ~/.ssh \
-    && ssh-keyscan github.com >> ~/.ssh/known_hosts
-
 # Grab and install a newer version of cmake necessary for E3SM case builds
 # Note that the public key for cmake is manually copied below from the kitware page
 # Alternatively, we could use a more up-to-date version of apt (via baseos image)
@@ -42,36 +33,46 @@ RUN apt remove -y cmake && \
 # Set the environment path to use the local install of cmake    
 ENV PATH="/cmake-3.16.2-Linux-x86_64/bin:$PATH"
 
-# Clone E3SM and initialize the submodules, includes FATES (note the --mount)
-# Note we also checkout a specific hash of e3sm.  There is a bug introducted 
-# in later versions of E3SM
-RUN --mount=type=ssh git clone git@github.com:E3SM-Project/E3SM.git && \
-    cd E3SM && \
-    git checkout dd276c966240ed65dd34fb5cddcc595caed02679 -b latestworkingfates && \
-    git submodule update --init --recursive
-
-# Copy in an example script - eventually move this to another Dockerfile as a testbed?
-COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
-
-# Change permissions for the script - Should this be at user level instead?
-RUN chmod a+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
+# Download public key for github.com
+RUN mkdir ~/.ssh && \
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # Add new group, user, and user directory with user permissions
 RUN groupadd -r dockerusers && \
-    useradd -g dockerusers elmuser && \
+    useradd -u 1001 -g dockerusers elmuser && \
     mkdir /home/elmuser && \
     chown elmuser:dockerusers /home/elmuser
 
 # Switch to the user and the user dir
-USER elmuser
 WORKDIR /home/elmuser
 
-# Copy in the configuration files to the container user home directory
-COPY cime /home/elmuser/.cime
+# Clone E3SM and initialize the submodules, includes FATES (note the --mount).
+# Due to issue with passing ssh client socket to root only, do this as root and
+# change permission after the fact.  
+# Note we also checkout a specific hash of e3sm.  There is a bug introduced 
+# in later versions of E3SM.
+RUN --mount=type=ssh git clone git@github.com:E3SM-Project/E3SM.git && \
+    cd E3SM && \
+    git checkout dd276c966240ed65dd34fb5cddcc595caed02679 -b latestworkingfates && \
+    git submodule update --init --recursive && \
+    chown -R elmuser:dockerusers /home/elmuser/E3SM && \
+    rm -rf /root/.ssh
 
-# Create mount point directories within the container (leave out scripts for direct volume mount?)
+# Switch to using elmuser
+USER elmuser
+
+# Copy in the configuration files to the container user home directory
+COPY --chown=elmuser:dockerusers cime .cime
+
+# Create mount point directories within the container
 RUN mkdir data && \
     mkdir output && \
-    mkdir scripts
+    ln -s -T /home/elmuser/E3SM/cime/scripts scripts
+
+# Copy in an example script - eventually move this to another Dockerfile as a testbed?
+COPY --chown=elmuser:dockerusers newcase-1x1brazil-e3sm.sh scripts
+
+# Change the permission for the example script so that user can run it
+RUN chmod u+x scripts/newcase-1x1brazil-e3sm.sh
 
 ### EOF
