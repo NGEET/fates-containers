@@ -14,8 +14,11 @@
        <append DEBUG="TRUE"> -g -fbacktrace -fbounds-check -ffpe-trap=invalid,zero,overflow</append>
      </FFLAGS>
      <SLIBS>
-       <append> -L$ENV{NETCDF_FORTRAN_PATH}/lib/ -lnetcdff -L$ENV{NETCDF_C_PATH}/lib/ -lnetcdf -lcurl -llapack -lblas </append>
+       <append> -L$ENV{HDF5_HOME}/lib -lhdf5_fortran -lhdf5 -lhdf5_hl -lhdf5hl_fortran </append>
+       <append> -L$ENV{NETCDF_PATH}/lib/ -lnetcdff -lnetcdf -lcurl -llapack -lblas </append>
      </SLIBS>
+     <HDF5_PATH>$ENV{HDF5_HOME}</HDF5_PATH>
+     <NETCDF_PATH>$ENV{NETCDF_PATH}</NETCDF_PATH>
      <SCC MPILIB="mpi-serial">gcc</SCC>
      <SFC MPILIB="mpi-serial">gfortran</SFC>
    </compiler>
