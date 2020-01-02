@@ -20,12 +20,12 @@ export RESOLUTION=1x1_brazil
 #------------------------------------------------------
 # USER AND MACHINE SPECIFIC SETUP - CHANGE AS NECESSARY
 #------------------------------------------------------
-export CIME_MODEL=e3sm
+export CIME_MODEL=e3sm      # This is actually defined in .cime
 export PROJECT=fakeproject
 export CATEGORY=fates
 export MACH=docker
 export COMPILER=gnu
-export CASEDIR=/output
+export CASEDIR=/home/elmuser/output
 
 #---------------------------------------------------------
 # SETUP DIRECTORY - USER SHOULD NOT NEED TO CHANGE THESE
