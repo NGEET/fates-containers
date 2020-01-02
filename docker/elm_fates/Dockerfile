@@ -17,10 +17,10 @@ ENV USER=elmuser
 # Set the maintainer metadata label
 LABEL maintainer="glemieux@lbl.gov"
 
-# Create mount point directories within the container (leave out scripts for direct volume mount?)
-RUN mkdir data && \
-    mkdir output && \
-    mkdir scripts
+# # Create mount point directories within the container (leave out scripts for direct volume mount?)
+# RUN mkdir data && \
+#     mkdir output && \
+#     mkdir scripts
 
 # Download public key for github.com
 RUN mkdir -p -m 0600 ~/.ssh \
@@ -50,9 +50,17 @@ RUN --mount=type=ssh git clone git@github.com:E3SM-Project/E3SM.git && \
     git checkout dd276c966240ed65dd34fb5cddcc595caed02679 -b latestworkingfates && \
     git submodule update --init --recursive
 
-# Add new group and user 
-RUN groupadd -r dockerusers &&\
-    useradd -g dockerusers elmuser
+# Copy in an example script - eventually move this to another Dockerfile as a testbed?
+COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
+
+# Change permissions for the script - Should this be at user level instead?
+RUN chmod a+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
+
+# Add new group, user, and user directory with user permissions
+RUN groupadd -r dockerusers && \
+    useradd -g dockerusers elmuser && \
+    mkdir /home/elmuser && \
+    chown elmuser:dockerusers /home/elmuser
 
 # Switch to the user and the user dir
 USER elmuser
@@ -61,10 +69,9 @@ WORKDIR /home/elmuser
 # Copy in the configuration files to the container user home directory
 COPY cime /home/elmuser/.cime
 
-# Copy in an example script - eventually move this to another Dockerfile as a testbed?
-COPY newcase-1x1brazil-e3sm.sh /E3SM/cime/scripts/
-
-# Change permissions for the script
-# RUN chmod u+x /E3SM/cime/scripts/newcase-1x1brazil-e3sm.sh
+# Create mount point directories within the container (leave out scripts for direct volume mount?)
+RUN mkdir data && \
+    mkdir output && \
+    mkdir scripts
 
 ### EOF
