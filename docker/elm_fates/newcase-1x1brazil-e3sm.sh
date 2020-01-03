@@ -30,6 +30,9 @@ export CASEDIR=/home/elmuser/output
 #---------------------------------------------------------
 # SETUP DIRECTORY - USER SHOULD NOT NEED TO CHANGE THESE
 #---------------------------------------------------------
+# Move to the script directory - handles call from docker cli
+cd /home/elmuser/E3SM/cime/scripts
+
 # Setup githash to append to test directory name
 export ELMHASH=`cd ../../;git log -n 1 --format=%h`
 export FATESHASH=`(cd ../../components/clm/src/external_models/fates;git log -n 1 --format=%h)`
