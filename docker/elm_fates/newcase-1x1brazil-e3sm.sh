@@ -52,6 +52,18 @@ cd ${CASENAME}
 #--------------------------------------------------------
 # UPDATE CASE CONFIGURATION - USER TO UPDATE AS NECESSARY
 #--------------------------------------------------------
+
+# The following is from the fates tutorial 
+./xmlchange --id STOP_N --val 1
+./xmlchange --id RUN_STARTDATE --val '2001-01-01'
+./xmlchange --id STOP_OPTION --val nyears
+./xmlchange --id DATM_CLMNCEP_YR_START --val 1996
+./xmlchange --id DATM_CLMNCEP_YR_END --val 2001
+./xmlchange --id CLM_FORCE_COLDSTART --val on
+
+#-------------------------------------------------------------------
+# UPDATE OUTPUT STRUCTURE AND OTHERS - USER SHOULDN'T NEED TO UPDATE
+#-------------------------------------------------------------------
 # Change the debugging setup
 ./xmlchange DEBUG=${DEBUGGING}
 
