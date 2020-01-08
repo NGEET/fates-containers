@@ -1,0 +1,7 @@
+version: "3.7"
+services: 
+    hostmodel:
+        image: ngeetropics/elmtest:v7
+volumes:
+    stdin_open: true
+    tty: true   
