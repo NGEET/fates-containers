@@ -3,7 +3,9 @@
 # ----------------------------------------------------------------------
 
 FROM centos:centos7.6.1810
-MAINTAINER S.P. Serbin email: sserbin@bnl.gov
+LABEL maintainer.name="Gregory Lemieux" \
+      maintainer.email="glemieux@lbl.gov" \
+      description="GCC-based image loaded with necessary dependencies for building FATES-HLM images"
 
 # Set a few variables that can be used to control the docker build
 ARG GCC_VERSION=5.5.0

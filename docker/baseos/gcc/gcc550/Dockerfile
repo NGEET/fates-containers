@@ -6,7 +6,6 @@ FROM gcc:5.5
 LABEL maintainer.name="Gregory Lemieux" \
       maintainer.email="glemieux@lbl.gov" \
       description="GCC-based image loaded with necessary dependencies for building FATES-HLM images"
-RUN useradd -ms /bin/bash clmuser
 
 # Set a few variables that can be used to control the docker build
 ARG OPENMPI_VERSION=2.1.5
@@ -79,6 +78,19 @@ ENV LANGUAGE en_US.UTF-8
 
 ## check locales
 RUN locale -a
+
+
+## Install Globus
+#RUN cd / \
+#    && wget http://toolkit.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo_latest_all.deb \
+#    && dpkg -i globus-toolkit-repo_latest_all.deb \
+#    && rm globus-toolkit-repo_latest_all.deb
+
+#RUN apt-get update -y \
+#    && apt-get install -y \
+#    globus-gridftp \
+#    globus-data-management-client
+
 ## compile openMPI
 RUN echo "*** Compiling openMPI " ${OPENMPI_VERSION}
 RUN cd / \
