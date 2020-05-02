@@ -3,8 +3,9 @@
 # ----------------------------------------------------------------------
 
 FROM gcc:5.5
-MAINTAINER S.P. Serbin email: sserbin@bnl.gov
-
+LABEL maintainer.name="Gregory Lemieux" \
+      maintainer.email="glemieux@lbl.gov" \
+      description="GCC-based image loaded with necessary dependencies for building FATES-HLM images"
 RUN useradd -ms /bin/bash clmuser
 
 # Set a few variables that can be used to control the docker build
