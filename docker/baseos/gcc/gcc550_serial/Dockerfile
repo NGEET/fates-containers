@@ -1,11 +1,13 @@
 # ----------------------------------------------------------------------
-# Debian baseOS docker container to use with CTSM builds
+# Debian baseOS docker container to use with HLM builds
 # ----------------------------------------------------------------------
 
 FROM gcc:5.5
-MAINTAINER S.P. Serbin email: sserbin@bnl.gov
-
-RUN useradd -ms /bin/bash clmuser
+LABEL maintainer.name="Gregory Lemieux" \
+      maintainer.email="glemieux@lbl.gov" \
+      author.name="S.P. Serbin" \
+      author.email="sserbin@bnl.gov" \
+      description="GCC-based image loaded with necessary dependencies for building FATES-HLM images"
 
 # Set a few variables that can be used to control the docker build
 ARG OPENMPI_VERSION=2.1.5

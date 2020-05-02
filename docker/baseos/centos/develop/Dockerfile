@@ -5,6 +5,8 @@
 FROM centos:centos7.6.1810
 LABEL maintainer.name="Gregory Lemieux" \
       maintainer.email="glemieux@lbl.gov" \
+      author.name="S.P. Serbin" \
+      author.email="sserbin@bnl.gov" \
       description="GCC-based image loaded with necessary dependencies for building FATES-HLM images"
 
 # Set a few variables that can be used to control the docker build

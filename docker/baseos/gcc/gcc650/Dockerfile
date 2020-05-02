@@ -5,8 +5,9 @@
 FROM gcc:6.5
 LABEL maintainer.name="Gregory Lemieux" \
       maintainer.email="glemieux@lbl.gov" \
+      author.name="S.P. Serbin" \
+      author.email="sserbin@bnl.gov" \
       description="GCC-based image loaded with necessary dependencies for building FATES-HLM images"
-RUN useradd -ms /bin/bash clmuser
 
 # Set a few variables that can be used to control the docker build
 ARG OPENMPI_VERSION=2.1.5
