@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------
-# Debian baseOS docker container to use with CTSM builds
+# Debian baseOS docker container to use with HLM builds
 # ----------------------------------------------------------------------
 
 FROM gcc:5.5
