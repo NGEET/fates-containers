@@ -31,7 +31,7 @@ RUN cd / \
     && mkdir -p output \
     && mkdir -p scripts \
     && mkdir -p baselines \
-    && mddir -p .cime 
+    && mkdir -p .cime 
 # RUN chown clmuser /data
 # RUN chown clmuser /output
 # RUN chown clmuser /scripts
@@ -52,7 +52,7 @@ RUN cd / \
     && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/ctsm/docker/fates-ctsm/cime_config/config_machines.xml
 
 ## Set $HOME directory for CIME
-ENV $HOME "/"
+ENV HOME=/
 
 # synchronize FATES code with CTSM fates_next_api branch
 # RUN cd /CTSM/src/fates \
