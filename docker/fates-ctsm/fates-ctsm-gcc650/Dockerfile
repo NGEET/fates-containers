@@ -8,7 +8,7 @@ LABEL maintainer.name="Gregory Lemieux" \
       author.name="Shawn Serbin" \
       author.email="sserbin@bnl.gov" \
       description="FATES model using CTSM host land model on GCC-base OS" \
-      version.fates="sci.1.36.0_api.11.2.0" \
+      version.fates="sci.1.40.1_api.13.0.1" \
       version.hlm="release-clm5.0.30" \
       version.baseos="gcc6.5"
 
@@ -32,24 +32,28 @@ RUN cd / \
     && mkdir -p scripts \
     && mkdir -p baselines \
     && mkdir -p .cime 
+## Remove this as unnecessary given recommended command line `user` call?
 # RUN chown clmuser /data
 # RUN chown clmuser /output
 # RUN chown clmuser /scripts
 
+## TODO: merge into single large RUN command?
 ## Clone CTSM model and checkout specific fates_next_api commit.  Grab the cime config directory from github
 RUN cd / \
     && git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && cd /CTSM \
     && git describe \
-    && git checkout e33b4658f6c51f8d1cce4ed1986bc3dc28014c5d \
+    && git checkout fates_next_api \
     && ./manage_externals/checkout_externals \
     && git describe \
     && cd src/fates/ \
     && git describe \
     && cd /.cime \
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/ctsm/docker/fates-ctsm/cime_config/config \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/ctsm/docker/fates-ctsm/cime_config/config \ 
     && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/ctsm/docker/fates-ctsm/cime_config/config_compilers.xml \
     && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/ctsm/docker/fates-ctsm/cime_config/config_machines.xml
+
+## Should the above wgets be changed to COPY?  We would have to then include the cime directory with every dockerfile.
 
 ## Set $HOME directory for CIME
 ENV HOME=/
