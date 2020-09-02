@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config_machines>
+   <machine MACH="docker">
+      <!-- customize these fields as appropriate for your system (max tasks) and
+           desired layout (change '${HOME}/projects' to your
+           prefered location). -->
+      <DESC>Containerized FATES-HLM</DESC>
+      <NODENAME_REGEX>dockernode</NODENAME_REGEX>
+      <OS>linux</OS>
+      <COMPILERS>gnu</COMPILERS>
+      <MPILIBS>openmpi,mpi-serial</MPILIBS>
+      <CIME_OUTPUT_ROOT>$ENV{HOME}/output</CIME_OUTPUT_ROOT>
+      <DIN_LOC_ROOT>$ENV{HOME}/inputdata</DIN_LOC_ROOT>
+      <DIN_LOC_ROOT_CLMFORC>$ENV{HOME}/projects/ptclm-data</DIN_LOC_ROOT_CLMFORC>
+      <DOUT_S_ROOT>$CIME_OUTPUT_ROOT/archive/$CASE</DOUT_S_ROOT>
+      <BASELINE_ROOT>$ENV{HOME}/baselines</BASELINE_ROOT>
+      <CCSM_CPRNC>$CIMEROOT/tools/cprnc/build/cprnc</CCSM_CPRNC>
+      <GMAKE>make</GMAKE>
+      <GMAKE_J>1</GMAKE_J>
+      <BATCH_SYSTEM>none</BATCH_SYSTEM>
+      <SUPPORTED_BY>glemieux at lbl dot gov</SUPPORTED_BY>
+      <MAX_TASKS_PER_NODE>4</MAX_TASKS_PER_NODE>
+      <MAX_MPITASKS_PER_NODE>1</MAX_MPITASKS_PER_NODE>
+      <PROJECT_REQUIRED>FALSE</PROJECT_REQUIRED>
+      <mpirun mpilib="mpi-serial">
+	<executable></executable>
+      </mpirun>
+      <mpirun mpilib="default">
+	<executable>mpirun</executable>
+	<arguments>
+	  <arg name="anum_tasks"> -np $TOTALPES</arg>
+	  <arg name="tasks_per_node"> -npernode $PES_PER_NODE</arg>
+	</arguments>
+      </mpirun>
+      <module_system type="none"/>
+      <environment_variables>
+        <env name="HDF5_HOME">/usr/local/hdf5</env>
+        <env name="NETCDF_PATH">/usr/local/netcdf</env>
+    </environment_variables>
+   </machine>
+
+</config_machines>
