@@ -24,12 +24,10 @@ VOLUME /home/$user/scripts
 
 # Add non-privledged user since case.py needs a valid username
 ARG user=fatesuser
-# ARG user=dockremap
+ENV USER=$user
 RUN useradd -m $user -u 9001
 USER $user
 WORKDIR /home/$user
-
-
 
 ## For now this needs to be done so that CLM python build scripts can find os.user. BUT how do we then run with a different user?
 # when using the --user flag it doesnt set the ENV var USER=$USER.  Maybe create a script that runs first that sets depending
@@ -42,15 +40,14 @@ WORKDIR /home/$user
 # RUN export USER=clmuser
 
 ## create data mount points in container - should change this to /mnt or something more generic in machines files
-# RUN cd / \
-# RUN mkdir -p inputdata \
-#     && mkdir -p output \
-#     && mkdir -p scripts \
-#     && mkdir -p baselines \
-#     && mkdir -p .cime 
+RUN cd / \
+    && mkdir -p inputdata \
+    && mkdir -p output \
+    && mkdir -p scripts \
+    && mkdir -p baselines \
+    && mkdir -p .cime 
 
-RUN mkdir -p .cime
-
+# RUN mkdir -p .cime
 
 ## Remove this as unnecessary given recommended command line `user` call?
 # RUN chown clmuser /data
@@ -59,8 +56,8 @@ RUN mkdir -p .cime
 
 ## TODO: merge into single large RUN command?
 ## Clone CTSM model and checkout specific fates_next_api commit.  Grab the cime config directory from github
-# RUN cd / \
-RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
+RUN cd / \
+    && git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && cd CTSM \
     && git describe \
     && git checkout abcd5937530cd22bc82bf5d7cc4eb28cf3bf1857 \
@@ -75,9 +72,6 @@ RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
 
 ## Should the above wgets be changed to COPY?  We would have to then include the cime directory with every dockerfile.
 
-## Set $HOME directory for CIME
-# ENV HOME=/
-
 # synchronize FATES code with CTSM fates_next_api branch
 # RUN cd /CTSM/src/fates \
 #     && git -c http.sslVerify=false remote add ngeet_repo https://github.com/NGEET/fates.git \
@@ -87,5 +81,8 @@ RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
 #     && git -c http.sslVerify=false checkout -b fates sci.1.23.0_api.7.1.0 \
 #     && git describe \
 #     && cd /
+
+## Set $HOME directory for CIME
+# ENV HOME=/
 
 ### EOF
