@@ -82,8 +82,6 @@ RUN cd / \
 RUN cd / \
     && mkdir -p fates_parameter_files \
     && ncgen -o fates_parameter_files/fates_params_2trop.c190205.nc /ctsm/src/fates/parameter_files/fates_params_default.cdl \
-    && ncgen -o fates_parameter_files/fates_params_14pfts.nc /ctsm/src/fates/parameter_files/fates_params_14pfts.cdl \
-    && ncgen -o fates_parameter_files/fates_params_hydro_default.nc /ctsm/src/fates/parameter_files/fates_params_hydro_default.cdl \
     && cd /
 
     ## copy in USNR1 example simulation data
