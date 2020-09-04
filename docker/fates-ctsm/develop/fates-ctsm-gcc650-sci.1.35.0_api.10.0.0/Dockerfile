@@ -44,17 +44,18 @@ RUN cd / \
     && cd /ctsm \
     && git -c http.sslVerify=false fetch origin \
     && git tag \
-    && git fetch origin 320a80dc9858d79a9f89d3ea580faf6261a08229:temp \
-    && git checkout temp \
-    && ./manage_externals/checkout_externals \
-    && git fetch origin e8623043e3365e86c2cecea1d475324e9a8e2da3:fates_next_api \
+    && git fetch origin abcd5937530cd22bc82bf5d7cc4eb28cf3bf1857:fates_next_api \
     && git checkout fates_next_api \
+    && ./manage_externals/checkout_externals \
     && git describe \
     && cd cime/config/cesm/machines/ \
     && rm config_compilers.xml \
     && rm config_machines.xml \
     && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_compilers.xml \
-    && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_machines.xml 
+    && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_machines.xml \
+    && cd /ctsm/src/fates \
+    && git describe 
+
     # && cd / \
     # && mkdir -p ctsm_run_scripts \
     # && cd ctsm_run_scripts \
@@ -68,14 +69,14 @@ RUN cd / \
     # && chmod 775 create_case_ctsmfates_1pt_example_PA-Bar.sh
 
     ## synchronize FATES code with CTSM fates_next_api branch
-RUN cd /ctsm/src/fates \
-    && git -c http.sslVerify=false remote add ngeet_repo https://github.com/NGEET/fates.git \
-    && git remote -v \
-    && git -c http.sslVerify=false fetch ngeet_repo \
-    && git tag \
-    && git -c http.sslVerify=false checkout -b fates sci.1.23.0_api.7.1.0 \
-    && git describe \
-    && cd /
+# RUN cd /ctsm/src/fates \
+#     && git -c http.sslVerify=false remote add ngeet_repo https://github.com/NGEET/fates.git \
+#     && git remote -v \
+#     && git -c http.sslVerify=false fetch ngeet_repo \
+#     && git tag \
+#     && git -c http.sslVerify=false checkout -b fates sci.1.23.0_api.7.1.0 \
+#     && git describe \
+#     && cd /
 
     ## create 14 PFT parameter file for simulation
 RUN cd / \
