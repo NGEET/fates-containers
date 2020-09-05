@@ -8,7 +8,7 @@ LABEL maintainer.name="Gregory Lemieux" \
       author.name="Shawn Serbin" \
       author.email="sserbin@bnl.gov" \
       description="FATES model using CTSM host land model on GCC-base OS" \
-      version.fates="sci.1.40.1_api.13.0.1" \
+      version.fates="sci.1.40.3_api.13.0.1" \
       version.hlm="release-clm5.0.30" \
       version.baseos="gcc6.5"
 
