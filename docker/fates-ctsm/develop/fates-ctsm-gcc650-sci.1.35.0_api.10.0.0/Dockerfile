@@ -30,12 +30,14 @@ RUN export USER=clmuser
 
     ## create data mount point in container - should change this to /mnt or something more generic in machines files
 RUN cd / \
-    && mkdir -p data \
-    && mkdir -p ctsm_output \
-    && mkdir -p scripts 
-RUN chown clmuser /data
-RUN chown clmuser /ctsm_output
+    && mkdir -p inputdata \
+    && mkdir -p output \
+    && mkdir -p scripts \
+    && mkdir -p /baselines
+RUN chown clmuser /inputdata
+RUN chown clmuser /output
 RUN chown clmuser /scripts
+RUN chown clmuser /baselines
 
     ## Checkout CTSM model - sync the version we need for this build. This can be simplified if we move to a newer version of CTSM/FATES
 RUN echo "*** Checkout CTSM model"
@@ -48,13 +50,20 @@ RUN cd / \
     && git checkout fates_next_api \
     && ./manage_externals/checkout_externals \
     && git describe \
-    && cd cime/config/cesm/machines/ \
-    && rm config_compilers.xml \
-    && rm config_machines.xml \
-    && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_compilers.xml \
-    && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_machines.xml \
     && cd /ctsm/src/fates \
-    && git describe 
+    && git describe \
+    && cd /.cime \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config \ 
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config_compilers.xml \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config_machines.xml
+
+    # && cd cime/config/cesm/machines/ \
+    # && rm config_compilers.xml \
+    # && rm config_machines.xml \
+    # && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_compilers.xml \
+    # && wget https://raw.githubusercontent.com/serbinsh/ctsm_containers/master/cime_config_files/cesm/machines/docker/config_machines.xml \
+    # && cd /ctsm/src/fates \
+    # && git describe 
 
     # && cd / \
     # && mkdir -p ctsm_run_scripts \
