@@ -33,11 +33,13 @@ RUN cd / \
     && mkdir -p inputdata \
     && mkdir -p output \
     && mkdir -p scripts \
-    && mkdir -p /baselines
+    && mkdir -p /baselines \
+    && mkdir -p /.cime
 RUN chown clmuser /inputdata
 RUN chown clmuser /output
 RUN chown clmuser /scripts
 RUN chown clmuser /baselines
+RUN chown clmuser /.cime
 
     ## Checkout CTSM model - sync the version we need for this build. This can be simplified if we move to a newer version of CTSM/FATES
 RUN echo "*** Checkout CTSM model"
