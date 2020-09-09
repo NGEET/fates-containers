@@ -15,18 +15,11 @@ LABEL maintainer.name="Gregory Lemieux" \
 # setting gmake
 RUN ln -s /usr/bin/make /usr/bin/gmake
 
-# Setup arguments
-ARG user=fatesuser
-#ARG homedir=/home/$user
-
 # Setup environment variables.  This is necessary for os.environ calls from case.py in CIME
-ENV USER=$user
-ENV HOME=/home/$user
+ENV USER=fatesuser
 
 # Add user directory structure.  This is necessary for CIME
-RUN useradd -m $user -u 9001
-#USER $user
-WORKDIR $HOME
+RUN useradd -m $USER -u 9001
 
 ## create data mount points in container - should change this to /mnt or something more generic in machines files
 RUN mkdir -p inputdata \
@@ -35,9 +28,8 @@ RUN mkdir -p inputdata \
     && mkdir -p baselines \
     && mkdir -p .cime 
 
-## TODO: merge into single large RUN command?
+## TODO: merge above into single large RUN command?
 ## Clone CTSM model and checkout specific fates_next_api commit.  Grab the cime config directory from github
-#RUN cd / \
 RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && cd CTSM \
     && git describe \
@@ -46,14 +38,17 @@ RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && git describe \
     && cd src/fates/ \
     && git describe \
-    && cd /$HOME/.cime \
+    && cd /.cime \
     && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config \ 
     && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config_compilers.xml \
     && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config_machines.xml
 
 ## Should the above wgets be changed to COPY?  We would have to then include the cime directory with every dockerfile.
+## The problem with wget is that it has no knowledge of whether or not the files changed state so a `docker build .` won't
+## really build a new image if nothing else is changed in the Dockerfile.
 
-# synchronize FATES code with CTSM fates_next_api branch
+## synchronize FATES code with CTSM fates_next_api branch.  Only necessary if using different fates hash from the one
+## designated by fates_next_api
 # RUN cd /CTSM/src/fates \
 #     && git -c http.sslVerify=false remote add ngeet_repo https://github.com/NGEET/fates.git \
 #     && git remote -v \
@@ -62,8 +57,5 @@ RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
 #     && git -c http.sslVerify=false checkout -b fates sci.1.23.0_api.7.1.0 \
 #     && git describe \
 #     && cd /
-
-## Set $HOME directory for CIME
-# ENV HOME=/
 
 ### EOF
