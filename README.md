@@ -30,7 +30,7 @@ This repository contains the necessary Dockerfiles to build FATES Docker images 
 ## Simple Test Run
 
 1. Pull docker image from Dockerhub: `docker pull ngeetropics/<dockerhub-repository-name>`
-2. Run and enter the container: `docker run --rm -ti --hostname=docker -v <your-local-scratch-directory>:/output -v <your-local-inputdata-dir>:/inputdata -v <your-local-scripts-dir>:/scripts ngeetropics/<dockerhub-repository-name>:latest`
+2. Run the container: `docker run --rm -ti --hostname=docker -u $(id -u):$(id -g) -v <your-local-scratch-directory>:/output -v <your-local-inputdata-dir>:/inputdata -v <your-local-scripts-dir>:/scripts ngeetropics/<dockerhub-repository-name>:latest`
 
 *Notes*: 
 - The docker images do not contain all the necessary input data, so access to an external data source is necessary.
