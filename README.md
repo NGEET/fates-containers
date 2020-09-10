@@ -29,7 +29,9 @@ This repository contains the necessary Dockerfiles to build FATES Docker images 
 
 ## Simple Test Run
 
-1. Pull docker image from Dockerhub: `docker pull ngeetropics/elmtest:latest`
-2. Build a simple case: `docker run --rm -ti --hostname=docker -v <your-local-scratch-directory>:/home/elmuser/output -v <your-local-inputdata-dir>:/home/elmuser/data ngeetropics/elmtest:latest /home/elmuser/scripts/newcase-1x1brazil-e3sm.sh`
-    - *Note*: The docker images do not contain all the necessary input data, so access to an external data source is necessary.
-3. Run testcase: `docker run -ti --hostname=docker -v <your-local-inputdata-dir>:/home/elmuser/data -v <your-local-scratch-directory>:/home/elmuser/output ngeetropics/elmtest:latest /bin/sh -c 'cd /home/elmuser/output/docker.1x1_brazil.ICLM45ED.e3sm.fates.Edd276c9-F3f6749d && ./case.submit'`
+1. Pull docker image from Dockerhub: `docker pull ngeetropics/<dockerhub-repository-name>`
+2. Run the container: `docker run --rm -ti --hostname=docker -u $(id -u):$(id -g) -v <your-local-scratch-directory>:/output -v <your-local-inputdata-dir>:/inputdata -v <your-local-scripts-dir>:/scripts ngeetropics/<dockerhub-repository-name>:latest`
+
+*Notes*: 
+- The docker images do not contain all the necessary input data, so access to an external data source is necessary.
+- Scripts need to be adjusted to match the internal structure of the docker container.  Template scripts forthcoming.
