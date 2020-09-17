@@ -35,3 +35,5 @@ This repository contains the necessary Dockerfiles to build FATES Docker images 
 *Notes*: 
 - The docker images do not contain all the necessary input data, so access to an external data source is necessary.
 - Scripts need to be adjusted to match the internal structure of the docker container.  Template scripts forthcoming.
+
+See the [wiki](https://github.com/NGEET/docker-fates-tutorial/wiki/) for more detailed information on using docker to build and run host land model cases.
