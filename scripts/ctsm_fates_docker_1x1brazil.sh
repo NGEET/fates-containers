@@ -261,10 +261,26 @@ echo "*** Build case ***"
 echo " "
 ./case.build
 
-echo "*** Finished building new case in CASE: ${CASE_NAME} ***"
+echo "*** Finished building new case in CASE: ${CASENAME} ***"
 echo " "
 echo " "
 echo " "
 
 # MANUALLY SUBMIT CASE
+echo "*****************************************************************************************************"
+echo "If you built this case interactively then:"
 echo "To submit the case change directory to ${CASENAME} and run ./case.submit"
+echo " "
+echo " "
+echo "If you built this case non-interactively then change your Docker run command to:"
+echo " "
+echo "docker run -t -i --hostname=docker --user $(id -u):$(id -g) -v ~/scratch/ctsm_fates:/output \
+-v /Volumes/data/Model_Data/cesm_input_datasets:/inputdata ngeetropics/fates-ctsm-gcc650:latest \
+/bin/sh -c 'cd ${CASENAME} && ./case.submit'"
+echo " "
+echo "Where you change the input/output paths, and docker image tag as needed to reflect your host setup"
+echo "*****************************************************************************************************"
+echo " "
+echo " "
+echo " "
+# eof
