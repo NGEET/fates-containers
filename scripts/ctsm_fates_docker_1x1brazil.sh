@@ -11,7 +11,21 @@
 # --met_end=2014 --output_vars=output_vars.txt --output_freq=H --descname=single_site_brazil \
 # --debug=FALSE
 #
-#
+# --compset Desired CTSM-FATES compset to build
+# --start_year What year to start the model simulation
+# --num_years How many years to run the model
+# --run_type Set the run type, default startup
+# --met_start First year of met forcing data to use
+# --met_end Last year of met forcing data to use
+# ** The combination of met_start & met_end define the window of met forcing years for
+#    the model simulation where 2010-2014 would be those years would be recycled over
+#    the simulation period. Helpful to reduce the number of files to download in a 
+#    simple test case.  Full range is 1901-2014
+# --output_vars Can use this to define a text file in the /scripts/ directory
+#   containing a list of model output variables to enable
+# --output_freq H hourly, M monthly
+# --descname Descriptive name for the model simulation.  Will be the case folder prefix
+# --debug TRUE/FALSE
 # =======================================================================================
 
 # =======================================================================================
