@@ -1,0 +1,3 @@
+'NEP','GPP','NPP','AR','HR','AGB','TLAI','ALBD','QVEGT',\
+'EFLX_LH_TOT','ED_biomass','ED_bleaf','ED_balive','NET_C_UPTAKE_CNLF'\
+'WIND','ZBOT','FSDS','RH','TBOT','PBOT','QBOT','RAIN','FLDS'
