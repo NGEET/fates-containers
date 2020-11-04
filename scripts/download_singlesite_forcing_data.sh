@@ -3,7 +3,7 @@
 # =======================================================================================
 #
 # INSTALL Python OSF API Client
-# pip3 install osfclient=
+# pip3 install osfclient
 #
 #
 # Usage guide
@@ -11,7 +11,9 @@
 # =======================================================================================
 
 # =======================================================================================
-# OPTIONS
+# USER OPTIONS
+# path to "single_site" directory within main CESM data directory located on the host
+# machine
 cesm_data_dir=~/Data/cesm_input_datasets/single_site
 mkdir -p ${cesm_data_dir}
 # =======================================================================================
