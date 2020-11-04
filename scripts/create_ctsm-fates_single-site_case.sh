@@ -82,6 +82,10 @@ case $i in
     met_end="${i#*=}"
     shift
     ;;
+    -res=*|--resolution=*)
+    resolution="${i#*=}"
+    shift
+    ;;
     -ov=*|--output_vars=*)
     output_vars="${i#*=}"
     shift
@@ -107,6 +111,7 @@ done
 # check for missing inputs and set defaults
 site_name="${site_name:-PA-SLZ}"
 compset="${compset:-I2000Clm50FatesGs}"
+resolution="${resolution:-0.9x1.25}"
 start_year="${start_year:-'2010-01-01'}"
 num_years="${num_years:-2}"
 rtype="${rtype:-startup}"
@@ -130,6 +135,7 @@ export INPUTDIR=/inputdata                             # /inputdata is default
 echo "Site Name = ${site_name}"
 echo "DATM data source = ${INPUTDIR}/${site_name}"
 echo "Model compset  = ${compset}"
+echo "Resolution: "${resolution}
 echo "Model simulation start year  = ${start_year}"
 echo "Number of simulation years  = ${num_years}"
 echo "Run type = ${rtype}"
@@ -189,23 +195,30 @@ cd ${CASENAME}
 # =======================================================================================
 # Setup forcing data paths and files:
 # Define forcing and surfice file data for run:
-export datmdata_dir=${INPUTDIR}/single_site/${site_name}
-echo "DATM forcing data directory:"
-echo ${datmdata_dir}
+export datmdata_dir=${INPUTDIR}/single_site/${site_name}/datmdata
+export datm_data_root=${INPUTDIR}/single_site/${site_name}
+echo "DATM root: ${datm_data_root}"
+echo "DATM data forcing data directory: ${datmdata_dir}"
 
-pattern=${datmdata_dir}/"domain.lnd.fv${resolution}*"
+pattern=${datmdata_dir}/atm_forcing.datm7.GSWP3.0.5d.v1.c170516/"domain.lnd.360x720_*"
+datm_domain_lnd=( $pattern )
+echo "DATM data land domain file:"
+export CLM5_DATM_DOMAIN_LND=${datm_domain_lnd[0]}
+echo "${CLM5_DATM_DOMAIN_LND}"
+
+pattern=${datm_data_root}/"domain.lnd.fv${resolution}*"
 domain_lnd=( $pattern )
 domain_lnd_file="$(basename $domain_lnd)"
 echo "Land domain file:"
-echo "${domain_lnd_file[0]}"
 export CLM5_USRDAT_DOMAIN=${domain_lnd_file[0]}
+echo "CLM5 Domain File: ${CLM5_USRDAT_DOMAIN}"
 
-pattern=${datmdata_dir}/"surfdata_${resolution}_16pfts*"
+pattern=${datm_data_root}/"surfdata_${resolution}_16pfts*"
 surfdata=( $pattern )
 surfdata_file="$(basename $surfdata)"
 echo "Surface file:"
-echo "${surfdata_file[0]}"
-export CLM5_SURFDAT=${surfdata_file[0]}
+export CLM5_SURFDAT_file=${surfdata_file[0]}
+echo "CLM5 Surface File: ${CLM5_SURFDAT_file}"
 # =======================================================================================
 
 # =======================================================================================
@@ -234,8 +247,8 @@ echo "*** Modifying xmls  ***"
 ./xmlchange -a CLM_CONFIG_OPTS='-nofire'
 ./xmlchange ATM_DOMAIN_FILE=${CLM5_USRDAT_DOMAIN}
 ./xmlchange LND_DOMAIN_FILE=${CLM5_USRDAT_DOMAIN}
-./xmlchange ATM_DOMAIN_PATH=${datmdata_dir}
-./xmlchange LND_DOMAIN_PATH=${datmdata_dir}
+./xmlchange ATM_DOMAIN_PATH=${datm_data_root}
+./xmlchange LND_DOMAIN_PATH=${datm_data_root}
 ./xmlchange CLM_USRDAT_NAME=${site_name}
 ./xmlchange MOSART_MODE=NULL
 
@@ -264,3 +277,98 @@ echo "*** Modifying xmls  ***"
 # Set run location to case dir
 ./xmlchange --file env_build.xml --id CIME_OUTPUT_ROOT --val ${CASENAME}
 # =======================================================================================
+
+# =======================================================================================
+echo "*** Update user_nl_clm ***"
+echo " "
+
+export CLM5_SURFDAT=${datm_data_root}/${CLM5_SURFDAT_file}
+echo "CLM5 Surface File Path: ${CLM5_SURFDAT}"
+if [[ $output_freq = "M" ]]; then
+echo "*** Set output frequency to monthy ***"
+cat >> user_nl_clm <<EOF
+fsurdat = '${CLM5_SURFDAT}'
+hist_empty_htapes = .true.
+hist_fincl1       = ${out_vars}
+hist_mfilt             = 12
+hist_nhtfrq            = 0
+EOF
+
+elif [[ $output_freq = "H" ]]; then
+echo "*** Set output frequency to hourly ***"
+cat >> user_nl_clm <<EOF
+fsurdat = '${CLM5_SURFDAT}'
+hist_empty_htapes = .true.
+hist_fincl1       = ${out_vars}
+hist_mfilt             = 8760
+hist_nhtfrq            = -1
+EOF
+
+else 
+echo "*** Output frequency option not valid, defaulting to monthly ***"
+cat >> user_nl_clm <<EOF
+fsurdat = '${CLM5_SURFDAT}'
+hist_empty_htapes = .true.
+hist_fincl1       = ${out_vars}
+hist_mfilt             = 12
+hist_nhtfrq            = 0
+EOF
+
+fi
+
+## define met params
+echo " "
+echo "*** Update met forcing options ***"
+echo " "
+cat >> user_nl_datm <<EOF
+mapalgo = 'nn', 'nn', 'nn'
+taxmode = "cycle", "cycle", "cycle"
+EOF
+
+#./cesm_setup
+echo "*** Running case.setup ***"
+echo " "
+./case.setup
+
+echo "*** Run preview_namelists ***"
+echo " "
+./preview_namelists
+
+echo "*** Build case ***"
+echo " "
+./case.build
+
+echo "*** Finished building new case in CASE: ${CASENAME} ***"
+echo " "
+echo " "
+echo " "
+
+# MANUALLY SUBMIT CASE
+echo "*****************************************************************************************************"
+echo "If you built this case interactively then:"
+echo "To submit the case change directory to ${CASENAME} and run ./case.submit"
+echo " "
+echo " "
+echo "If you built this case non-interactively then change your Docker run command to:"
+echo " "
+echo 'docker run -t -i --hostname=docker --user $(id -u):$(id -g) --volume /path/to/host/inputs:/inputdata \
+--volume /path/to/host/outputs:/output docker_image_tag' "/bin/sh -c 'cd ${CASENAME} && ./case.submit'"
+echo " "
+echo "Where: "
+echo "/path/to/host/inputs is your host input path, such as /Volumes/data/Model_Data/cesm_input_datasets"
+echo "/path/to/host/outputs is your host output path, such as ~/scratch/ctsm_fates"
+echo "/path/to/host/outputs is the docker image tag on your host machine, e.g. ngeetropics/fates-ctsm-gcc650:latest"
+echo " "
+echo "Alternatively, you can use environmental variables to define the constants, e.g.:"
+echo "export input_data=/Volumes/data/Model_Data/cesm_input_datasets"
+echo "export output_dir=~/scratch/ctsm_fates"
+echo "export docker_tag=ngeetropics/fates-ctsm-gcc650:latest"
+echo " "
+echo "And run the case using:"
+echo 'docker run -t -i --hostname=docker --user $(id -u):$(id -g) --volume ${input_data}:/inputdata \
+--volume ${output_dir}:/output ${docker_tag}' "/bin/sh -c 'cd ${CASENAME} && ./case.submit'"
+echo "*****************************************************************************************************"
+echo " "
+echo " "
+echo " "
+# eof
