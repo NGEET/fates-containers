@@ -29,12 +29,21 @@ RUN mkdir -p inputdata \
     && mkdir -p .cime 
 
 ## TODO: merge above into single large RUN command?
-## Clone CTSM model
+## Clone CTSM model and grab the docker-specific cime config directory from github
 RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && cd CTSM \
     && git describe \
     && git checkout ctsm5.1.dev022 \
     && ./manage_externals/checkout_externals \
-    && git describe 
+    && git describe \
+    && cd src/fates/ \
+    && git describe \
+    && cd /.cime \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/ctsm/cime_config/config \ 
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/ctsm/cime_config/config_compilers.xml \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/ctsm/cime_config/config_machines.xml
 
+## Should the above wgets be changed to COPY?  We would have to then include the cime directory with every dockerfile.
+## The problem with wget is that it has no knowledge of whether or not the files changed state so a `docker build .` won't
+## really build a new image if nothing else is changed in the Dockerfile.
 ### EOF
