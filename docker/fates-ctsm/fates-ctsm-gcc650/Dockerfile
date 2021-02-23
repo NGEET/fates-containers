@@ -39,9 +39,9 @@ RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && cd src/fates/ \
     && git describe \
     && cd /.cime \
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config \ 
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config_compilers.xml \
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/develop/docker/fates-ctsm/cime_config/config_machines.xml
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/fates-ctsm/cime_config/config \ 
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/fates-ctsm/cime_config/config_compilers.xml \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/fates-ctsm/cime_config/config_machines.xml
 
 ## Should the above wgets be changed to COPY?  We would have to then include the cime directory with every dockerfile.
 ## The problem with wget is that it has no knowledge of whether or not the files changed state so a `docker build .` won't
