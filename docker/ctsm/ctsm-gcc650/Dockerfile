@@ -5,11 +5,11 @@
 FROM ngeetropics/hlmbase-gcc650:v.0.0.0
 LABEL maintainer.name="Gregory Lemieux" \
       maintainer.email="glemieux@lbl.gov" \
-      author.name="Shawn Serbin" \
-      author.email="sserbin@bnl.gov" \
-      description="FATES model using CTSM host land model on GCC-base OS" \
-      version.fates="sci.1.40.1_api.13.0.1" \
-      version.hlm="release-clm5.0.30" \
+      author.name="Gregory Lemieux" \
+      author.email="glemieux@lbl.gov" \
+      description="CTSM host land model on GCC-base OS" \
+      version.fates="sci.1.43.2_api.14.2.0" \
+      version.hlm="ctsm5.1.dev022" \
       version.baseos="gcc6.5"
 
 # setting gmake
@@ -29,33 +29,21 @@ RUN mkdir -p inputdata \
     && mkdir -p .cime 
 
 ## TODO: merge above into single large RUN command?
-## Clone CTSM model and checkout specific fates_next_api commit.  Grab the cime config directory from github
+## Clone CTSM model and grab the docker-specific cime config directory from github
 RUN git -c http.sslVerify=false clone https://github.com/ESCOMP/CTSM.git \
     && cd CTSM \
     && git describe \
-    && git checkout abcd5937530cd22bc82bf5d7cc4eb28cf3bf1857 \
+    && git checkout ctsm5.1.dev022 \
     && ./manage_externals/checkout_externals \
     && git describe \
     && cd src/fates/ \
     && git describe \
     && cd /.cime \
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/fates-ctsm/cime_config/config \ 
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/fates-ctsm/cime_config/config_compilers.xml \
-    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/fates-ctsm/cime_config/config_machines.xml
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/ctsm/cime_config/config \ 
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/ctsm/cime_config/config_compilers.xml \
+    && wget https://raw.githubusercontent.com/glemieux/docker-fates-tutorial/master/docker/ctsm/cime_config/config_machines.xml
 
 ## Should the above wgets be changed to COPY?  We would have to then include the cime directory with every dockerfile.
 ## The problem with wget is that it has no knowledge of whether or not the files changed state so a `docker build .` won't
 ## really build a new image if nothing else is changed in the Dockerfile.
-
-## synchronize FATES code with CTSM fates_next_api branch.  Only necessary if using different fates hash from the one
-## designated by fates_next_api
-# RUN cd /CTSM/src/fates \
-#     && git -c http.sslVerify=false remote add ngeet_repo https://github.com/NGEET/fates.git \
-#     && git remote -v \
-#     && git -c http.sslVerify=false fetch ngeet_repo \
-#     && git tag \
-#     && git -c http.sslVerify=false checkout -b fates sci.1.23.0_api.7.1.0 \
-#     && git describe \
-#     && cd /
-
 ### EOF
