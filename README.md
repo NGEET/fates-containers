@@ -1,6 +1,6 @@
-# Docker Fates Tutorial Repo
+# Docker Tutorial FATES Container Repository
 
-This repository contains the necessary Dockerfiles to build FATES Docker images that are then loaded to the [NGEE-Tropics Docker Hub Repo](https://hub.docker.com/orgs/ngeetropics/repositories).  It is *not* necessary to clone this repo to run FATES Docker containers; this repo is intended for developers and maintainers of the FATES Docker images.
+This repository contains the necessary Dockerfiles to build FATES Docker images that are then loaded to the [NGEE-Tropics Docker Hub Repo](https://hub.docker.com/orgs/ngeetropics/repositories).  The images built by this repository are intended to be utilized with the [fates tutorial](https://github.com/NGEET/fates-tutorial).  It is *not* necessary to clone this repo to run FATES Docker containers or to run the docker tutorial containers.  For information on how to the docker containers for the fates tutorial see documentation on the [fates tutorial](https://github.com/NGEET/fates-tutorial).
 
 ## [Quick Docker Introduction](https://docs.docker.com/engine/docker-overview/)
 
